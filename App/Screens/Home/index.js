@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, Animated, StatusBar, PanResponder, FlatList, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, Modal, StatusBar, TouchableHighlight, FlatList, Alert } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { openDatabase } from 'react-native-sqlite-storage';
@@ -26,6 +26,10 @@ export default class index extends Component {
         this.state = {
             datasource: [],
             visible: false,
+            width:150,
+            height:150,
+            columns:2,
+            modalVisible: false,
             small: {
                 width: responsiveWidth(20),
                 height: responsiveWidth(20),
@@ -109,7 +113,9 @@ export default class index extends Component {
         });
     };
 
-
+    setSIze() {
+        alert(";;;;;")
+    }
 
 
 
@@ -132,24 +138,57 @@ export default class index extends Component {
 
     // })
 
-     createTwoButtonAlert = () =>
-    Alert.alert(
-      "Select",
-      
-      [
-        {
-          text: "Cancel",
-          onPress: () => console.log("Cancel Pressed"),
-          style: "cancel"
-        },
-        { text: "OK", onPress: () => console.log("OK Pressed") }
-      ],
-      { cancelable: false }
-    );
+
+
 
     render() {
         return (
             <View style={styles.container}>
+                <Modal
+                    animationType="slide"
+                    transparent={true}
+                    visible={this.state.modalVisible}
+                    onRequestClose={() => {
+                        Alert.alert("Modal has been closed.");
+                    }}
+                >
+                    <View style={styles.centeredView}>
+                        <View style={styles.modalView}>
+
+                            <TouchableHighlight
+                                style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
+                                onPress={() => {
+                                    this.setState({height:250,width:250,columns:1})
+1
+                                }}
+                            >
+                                <Text style={styles.textStyle}>Large</Text>
+                            </TouchableHighlight>
+                        </View>
+                        <View style={styles.modalView}>
+
+                            <TouchableHighlight
+                                style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
+                                onPress={() => {
+                                    this.setState({height:100,width:100,columns:3})
+                                }}
+                            >
+                                <Text style={styles.textStyle}>Small</Text>
+                            </TouchableHighlight>
+                        </View> 
+                        <View style={styles.modalView}>
+
+                            <TouchableHighlight
+                                style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
+                                onPress={() => {
+                                    this.setState({height:150,width:150,columns:2})
+                                }}
+                            >
+                                <Text style={styles.textStyle}>Medium</Text>
+                            </TouchableHighlight>
+                        </View>
+                    </View>
+                </Modal>
                 <StatusBar backgroundColor='transparent' barStyle='light-content' translucent />
                 <View style={styles.headerView}>
                     <TouchableOpacity
@@ -162,7 +201,7 @@ export default class index extends Component {
                         <TouchableOpacity onPress={() => this.setState({ visible: !this.state.visible })}>
                             <Feather name="edit" size={25} color={Color.iconeColor} />
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={()=>this.createTwoButtonAlert()}>
+                        <TouchableOpacity onPress={() => { this.setState({ modalVisible: true }) }}>
 
                             <Ionicons name="settings-sharp" size={25} color={Color.iconeColor} />
                         </TouchableOpacity>
@@ -174,8 +213,9 @@ export default class index extends Component {
 
                     <FlatList
                         showsVerticalScrollIndicator={false}
-                        numColumns={2}
-                        data={this.state.datasource}
+                        numColumns = {this.state.columns}
+                        key={this.state.columns}
+                                                data={this.state.datasource}
                         keyExtractor={item => item}
                         renderItem={({ item, index }) => {
                             return (
@@ -187,7 +227,7 @@ export default class index extends Component {
                                     onPress={() => { this.props.navigation.navigate('singleUserView', { data: item }) }}
 
                                     key={index}
-                                    style={styles.Imagebutton}>
+                                    style={[styles.Imagebutton,{width:this.state.width,height:this.state.height}]}>
                                     {this.state.visible ?
                                         <View style={styles.iconeView2}>
                                             <TouchableOpacity onPress={() => Alert.alert('Alert', 'Are you sure you want to delete?',
