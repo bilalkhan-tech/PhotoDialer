@@ -90,7 +90,10 @@ renderItem={({item,index})=>{
     key={index} style={styles.ImageButton}>
       <Image
       resizeMode={'cover'}
-      source={{uri:item.user_image}}
+      source={ item.user_image?{uri:item.user_image}:
+    require('../../Component/image/user.png')
+    }
+
       style={styles.userimage}
       
       />

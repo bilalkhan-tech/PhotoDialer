@@ -78,17 +78,13 @@ export default class index extends Component {
         (tx, results) => {
           console.log('Results', results.rowsAffected);
           if (results.rowsAffected > 0) {
-            Alert.alert(
-              'Success',
-              'User updated successfully',
-              [
-                {
-                  text: 'Ok',
-                  // onPress: () => navigation.navigate('HomeScreen'),
-                },
-              ],
-              { cancelable: false }
-            );
+            Toast.showWithGravity(
+              'Contact Successfully Updated',
+              Toast.SHORT,
+              Toast.BOTTOM,
+             
+            )
+            this.props.navigation.navigate('home')
           } else alert('Updation Failed');
         }
       );

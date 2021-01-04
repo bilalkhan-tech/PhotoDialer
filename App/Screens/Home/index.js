@@ -6,6 +6,7 @@ import { openDatabase } from 'react-native-sqlite-storage';
 import Feather from "react-native-vector-icons/Feather";
 import EvilIcons from "react-native-vector-icons/EvilIcons";
 import Entypo from "react-native-vector-icons/Entypo";
+import Toast from 'react-native-simple-toast';
 
 const db = openDatabase({ name: 'ContactBook.db' })
 import Color from "../../Component/Colors"
@@ -26,9 +27,9 @@ export default class index extends Component {
         this.state = {
             datasource: [],
             visible: false,
-            width:150,
-            height:150,
-            columns:2,
+            width: 150,
+            height: 150,
+            columns: 2,
             modalVisible: false,
             small: {
                 width: responsiveWidth(20),
@@ -94,17 +95,14 @@ export default class index extends Component {
                 (tx, results) => {
                     console.log('Results', results.rowsAffected);
                     if (results.rowsAffected > 0) {
-                        Alert.alert(
-                            'Success',
-                            'User deleted successfully',
-                            [
-                                {
-                                    text: 'Ok',
-                                    // onPress: () => navigation.navigate('HomeScreen'),
-                                },
-                            ],
-                            { cancelable: false }
-                        );
+                        Toast.showWithGravity(
+                            'Contact Successfully Deleted',
+                            Toast.SHORT,
+                            Toast.BOTTOM,
+                           
+                          )
+                          this.props.navigation.navigate('home')
+                        
                     } else {
                         alert('Please insert a valid User Id');
                     }
@@ -113,9 +111,7 @@ export default class index extends Component {
         });
     };
 
-    setSIze() {
-        alert(";;;;;")
-    }
+
 
 
 
@@ -144,13 +140,12 @@ export default class index extends Component {
     render() {
         return (
             <View style={styles.container}>
+
                 <Modal
                     animationType="slide"
                     transparent={true}
                     visible={this.state.modalVisible}
-                    onRequestClose={() => {
-                        Alert.alert("Modal has been closed.");
-                    }}
+                   
                 >
                     <View style={styles.centeredView}>
                         <View style={styles.modalView}>
@@ -158,8 +153,8 @@ export default class index extends Component {
                             <TouchableHighlight
                                 style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
                                 onPress={() => {
-                                    this.setState({height:250,width:250,columns:1})
-1
+                                    this.setState({ height: 200, width: 400, columns: 1,modalVisible:false })
+                                    1
                                 }}
                             >
                                 <Text style={styles.textStyle}>Large</Text>
@@ -170,18 +165,18 @@ export default class index extends Component {
                             <TouchableHighlight
                                 style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
                                 onPress={() => {
-                                    this.setState({height:100,width:100,columns:3})
+                                    this.setState({ height: 100, width: 100, columns: 3,modalVisible:false })
                                 }}
                             >
                                 <Text style={styles.textStyle}>Small</Text>
                             </TouchableHighlight>
-                        </View> 
+                        </View>
                         <View style={styles.modalView}>
 
                             <TouchableHighlight
                                 style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
                                 onPress={() => {
-                                    this.setState({height:150,width:150,columns:2})
+                                    this.setState({ height: 150, width: 150, columns: 2,modalVisible:false })
                                 }}
                             >
                                 <Text style={styles.textStyle}>Medium</Text>
@@ -189,6 +184,15 @@ export default class index extends Component {
                         </View>
                     </View>
                 </Modal>
+
+
+
+
+
+
+
+
+
                 <StatusBar backgroundColor='transparent' barStyle='light-content' translucent />
                 <View style={styles.headerView}>
                     <TouchableOpacity
@@ -213,9 +217,9 @@ export default class index extends Component {
 
                     <FlatList
                         showsVerticalScrollIndicator={false}
-                        numColumns = {this.state.columns}
+                        numColumns={this.state.columns}
                         key={this.state.columns}
-                                                data={this.state.datasource}
+                        data={this.state.datasource}
                         keyExtractor={item => item}
                         renderItem={({ item, index }) => {
                             return (
@@ -227,7 +231,7 @@ export default class index extends Component {
                                     onPress={() => { this.props.navigation.navigate('singleUserView', { data: item }) }}
 
                                     key={index}
-                                    style={[styles.Imagebutton,{width:this.state.width,height:this.state.height}]}>
+                                    style={[styles.Imagebutton, { width: this.state.width, height: this.state.height }]}>
                                     {this.state.visible ?
                                         <View style={styles.iconeView2}>
                                             <TouchableOpacity onPress={() => Alert.alert('Alert', 'Are you sure you want to delete?',
@@ -254,7 +258,8 @@ export default class index extends Component {
                                         </View>
                                         : null}
                                     <Image
-                                        style={styles.userIamge}
+                                    resizeMode='cover'
+                                        style={[styles.userIamge,{width:this.state.width,height:this.state.height}]}
                                         source={item.user_image ? { uri: item.user_image } :
 
                                             require('../../Component/image/user.png')
@@ -285,6 +290,26 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
 
     },
+
+    centeredView: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        alignSelf: 'center',
+        width: responsiveWidth(80),
+        height: responsiveHeight(30),
+        marginTop: responsiveHeight(40),
+        borderRadius: responsiveWidth(2),
+        backgroundColor: '#eee',
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 1,
+        },
+        shadowOpacity: 0.20,
+        shadowRadius: 1.41,
+
+        elevation: 2,
+    },
     iconView: {
         width: responsiveWidth(15),
         alignItems: 'center',
@@ -298,14 +323,12 @@ const styles = StyleSheet.create({
     flatlistView: {
         marginTop: responsiveHeight(4),
         alignSelf: 'center',
+        overflow:'hidden',
         alignItems: 'center',
         justifyContent: 'space-evenly',
         width: responsiveWidth(90)
     },
-    userIamge: {
-        width: responsiveWidth(45),
-        height: responsiveWidth(45),
-    },
+  
     iconeView2: {
         width: '100%',
         justifyContent: 'space-between',
@@ -316,6 +339,25 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
 
 
+    },
+    openButton: {
+        width: responsiveWidth(70),
+        height: responsiveHeight(6),
+        justifyContent: 'center',
+        alignItems: 'center',
+        alignSelf: 'center',
+        marginVertical: responsiveHeight(1)
+    },
+    textStyle: {
+        fontSize: responsiveFontSize(2),
+        color: Color.white,
+        fontWeight: '600'
+    },
+    Imagebutton:{
+        marginVertical:responsiveHeight(1),
+        marginStart:responsiveWidth(5),
+        alignSelf: 'center',
     }
+
 
 })
