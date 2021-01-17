@@ -23,6 +23,7 @@ import Modal from 'react-native-modal';
 import Color from '../../Component/Colors'
 import { openDatabase } from 'react-native-sqlite-storage';
 const db = openDatabase({ name: 'ContactBook.db' });
+import Toast from 'react-native-simple-toast';
 export default class index extends Component {
   constructor(props) {
     super(props);
@@ -105,17 +106,8 @@ export default class index extends Component {
         (tx, results) => {
           console.log('Results', results.rowsAffected);
           if (results.rowsAffected > 0) {
-            Alert.alert(
-              'Success',
-              'User updated successfully',
-              [
-                {
-                  text: 'Ok',
-                  // onPress: () => navigation.navigate('HomeScreen'),
-                },
-              ],
-              { cancelable: false }
-            );
+            Toast.showWithGravity('Contact Updated Successfully',Toast.SHORT,Toast.BOTTOM)
+           
           } else alert('Updation Failed');
         }
       );
