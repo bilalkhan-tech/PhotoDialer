@@ -8,6 +8,7 @@ import {
 } from 'react-native-responsive-dimensions';
 import AntDesign from "react-native-vector-icons/AntDesign";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import Contacts from 'react-native-contacts'
 export default class index extends Component {
   constructor(props) {
     super(props);
@@ -26,7 +27,10 @@ export default class index extends Component {
             <TouchableOpacity onPress={()=>this.props.navigation.navigate('adduser')} style={styles.Addbutton}>
                 <Text style={styles.existingContactText}>Add New Contact</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.Addbutton}>
+            <TouchableOpacity 
+            
+            onPress={()=>this.props.navigation.navigate('showAllCobtacts')}
+            style={styles.Addbutton}>
                 <Text style={styles.existingContactText}>Add Existing Contacts</Text>
             </TouchableOpacity>
             </View>

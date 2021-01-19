@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, Modal, StatusBar, TouchableHighlight, FlatList, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, Modal, StatusBar,Linking, TouchableHighlight, FlatList, Alert } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { openDatabase } from 'react-native-sqlite-storage';
@@ -15,6 +15,7 @@ import {
     responsiveWidth,
     responsiveFontSize,
 } from 'react-native-responsive-dimensions';
+import { Link } from '@react-navigation/native';
 export default class index extends Component {
 
     // textposition={x:0,y:0}
@@ -34,18 +35,18 @@ export default class index extends Component {
             small: {
                 width: responsiveWidth(20),
                 height: responsiveWidth(20),
-                numColumns: 3
+                numColumns: 4
 
             },
             large: {
-                width: responsiveWidth(55),
-                height: responsiveWidth(55),
-                numColumns: 1
+                width: responsiveWidth(40),
+                height: responsiveWidth(40),
+                numColumns: 2
             },
             medium: {
                 width: responsiveWidth(30),
                 height: responsiveWidth(30),
-                numColumns: 2
+                numColumns: 3
 
             }
 
@@ -100,7 +101,8 @@ export default class index extends Component {
                             Toast.SHORT,
                             Toast.BOTTOM,
                            
-                          )
+                          ),
+                         
                           this.props.navigation.navigate('home')
                         
                     } else {
@@ -135,6 +137,17 @@ export default class index extends Component {
     // })
 
 
+    callUser=(item)=>{
+        if(item.user_contact<=1){
+             Linking.openURL(`tel:${item.user_contact}`)
+        }
+        else{
+            this.props.navigation.navigate('singleUserView',{data:item})
+        }
+       
+        
+    }
+
 
 
     render() {
@@ -153,7 +166,7 @@ export default class index extends Component {
                             <TouchableHighlight
                                 style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
                                 onPress={() => {
-                                    this.setState({ height: 200, width: 400, columns: 1,modalVisible:false })
+                                    this.setState({ height: 150, width: 150, columns: 2,modalVisible:false })
                                     1
                                 }}
                             >
@@ -165,7 +178,7 @@ export default class index extends Component {
                             <TouchableHighlight
                                 style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
                                 onPress={() => {
-                                    this.setState({ height: 100, width: 100, columns: 3,modalVisible:false })
+                                    this.setState({ height: 70, width: 70, columns: 4,modalVisible:false })
                                 }}
                             >
                                 <Text style={styles.textStyle}>Small</Text>
@@ -176,7 +189,7 @@ export default class index extends Component {
                             <TouchableHighlight
                                 style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
                                 onPress={() => {
-                                    this.setState({ height: 150, width: 150, columns: 2,modalVisible:false })
+                                    this.setState({ height: 100, width: 100, columns: 3,modalVisible:false })
                                 }}
                             >
                                 <Text style={styles.textStyle}>Medium</Text>
@@ -228,9 +241,18 @@ export default class index extends Component {
                                     // {...this.panResponder.panHandlers}
 
                                     onLongPress={() => this.props.navigation.navigate('allchiledShow', { data: item })}
-                                    onPress={() => { this.props.navigation.navigate('singleUserView', { data: item }) }}
+                                    onPress={() =>  this.callUser(item)
+                                        //Linking.openURL(`tel:${item.user_contact}`)
+                                        // if(item.user_contact==1){
+                                        //     Linking.openURL(`tel:${item.user_contact}`)}
+                                        // }
+                                        // else {
+                                        //     this.props.navigation.navigate('singleUserView',{data:item})
+                                         }
+                                        
+                                       
 
-                                    key={index}
+                                  //  key={index}
                                     style={[styles.Imagebutton, { width: this.state.width, height: this.state.height }]}>
                                     {this.state.visible ?
                                         <View style={styles.iconeView2}>
@@ -326,7 +348,7 @@ const styles = StyleSheet.create({
         overflow:'hidden',
         alignItems: 'center',
         justifyContent: 'space-evenly',
-        width: responsiveWidth(90)
+        width: responsiveWidth(100)
     },
   
     iconeView2: {
@@ -354,9 +376,10 @@ const styles = StyleSheet.create({
         fontWeight: '600'
     },
     Imagebutton:{
-        marginVertical:responsiveHeight(1),
-        marginStart:responsiveWidth(5),
-        alignSelf: 'center',
+        marginVertical:responsiveHeight(.5),
+      //  marginStart:responsiveWidth(2),
+        marginEnd:responsiveWidth(5)
+       // alignSelf: 'center',
     }
 
 

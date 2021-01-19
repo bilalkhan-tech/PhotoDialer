@@ -43,7 +43,7 @@ export default class index extends Component {
             if (res.rows.length == 0) {
               txn.executeSql('DROP TABLE IF EXISTS MyContactBook', []);
               txn.executeSql(
-                'CREATE TABLE IF NOT EXISTS MyContactBook(user_id INTEGER PRIMARY KEY AUTOINCREMENT, user_name VARCHAR(20),pid INTEGER, user_contact VARCHAR(20), user_image  VARCHAR(20))',
+                'CREATE TABLE IF NOT EXISTS MyContactBook(user_id INTEGER PRIMARY KEY AUTOINCREMENT, user_name VARCHAR(20),pid INTEGER, user_contact VARCHAR(20), user_relation VARCHAR(20), user_image  VARCHAR(20))',
                 [],
                 () => alert('Created new table'),
                 () => errorCB(),
@@ -57,7 +57,19 @@ export default class index extends Component {
     }
   }
   async SaveDAta()
+
+
+
   {  let { username,mobileNum, showImage} = this.state;
+if(username==''){
+  alert('Contact Name is requried')
+}
+else if(mobileNum=='')
+{
+  alert('Mobile Number is requried')
+}
+else{
+
    let newnum=JSON.stringify(mobileNum)
   await db.transaction(async function (tx) {
     tx.executeSql(
@@ -72,10 +84,8 @@ export default class index extends Component {
             Toast.SHORT,
             Toast.BOTTOM,
            
-          )
+          ),
           this.props.navigation.navigate('home')
-         
-          
           console.log('No of sections inserted :' + JSON.stringify(results.rowsAffected));
         } else {
           
@@ -93,7 +103,7 @@ export default class index extends Component {
       },
     );
   });
-  
+}
   }
      
 

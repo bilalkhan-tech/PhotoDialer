@@ -14,6 +14,7 @@ import ChiledContact from "./App/Screens/ChiledContact";
 import AllChiledShow from "./App/Screens/AllChiledShow";
 import UpdateParentUser from "./App/Screens/UpdateParentUser";
 import SingleChiledShow from "./App/Screens/SingleChiledShow";
+import ShowAllContacts from "./App/Screens/ShowAllContacts";
 
 const Stack=createStackNavigator();
 const Tab=createBottomTabNavigator();
@@ -30,6 +31,7 @@ export default myStack=()=>{
       <Stack.Screen name='allchiledShow' component={AllChiledShow}/> 
       <Stack.Screen name='singleUserView' component={ViewSingleUser}/> 
       <Stack.Screen name='singleChiledShow' component={SingleChiledShow}/> 
+      <Stack.Screen name='showAllCobtacts' component={ShowAllContacts}/> 
       <Stack.Screen name='home' component={tabBar}/> 
       </Stack.Navigator>
     </NavigationContainer>

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text,TouchableOpacity ,Image,FlatList,SafeAreaView,TextInput,StyleSheet} from 'react-native';
+import { View, Text,Linking,TouchableOpacity ,Image,FlatList,SafeAreaView,TextInput,StyleSheet} from 'react-native';
 import  Color  from "../../Component/Colors";
 
 import {
@@ -9,6 +9,7 @@ import {
 } from 'react-native-responsive-dimensions';
 import AntDesign from "react-native-vector-icons/AntDesign";
 import {openDatabase} from 'react-native-sqlite-storage';
+import { Link } from '@react-navigation/native';
 const db = openDatabase({name: 'ContactBook.db'});
 
 export default class Search extends Component {
@@ -16,6 +17,8 @@ export default class Search extends Component {
     super(props);
     this.state = {
       serachResult:'',
+      searchResultData:true,
+      searchData:[],
       datasource:[]
     }
  this.GetContact();
@@ -47,7 +50,39 @@ export default class Search extends Component {
         },
       );
     });
-  };
+  };  
+
+onSubmitedEdit= async ()=>{
+  const that = this
+
+    await db.transaction(async function (tx) {
+      tx.executeSql(
+        'Select * from MyContactBook where user_name=?',
+        [that.state.serachResult],
+        (tx, results) => {
+          let mydata = [];
+          if (results.rows.length > 0) {
+            console.log('results.rows: ' + JSON.stringify(results.rows));
+            for (let i = 0; i < results.rows.length; i++) {
+              mydata.push(results.rows.item(i));
+            }
+           // alert(JSON.stringify(mydata))
+           that.setState({searchResultData:false})
+            console.log(JSON.stringify(mydata))
+            that.setState({searchData: mydata});
+          } else {
+            console.log('data not found');
+          }
+        },
+        (err) => {
+          // alert(err);
+          console.log('error: ' + JSON.stringify(err));
+          return false;
+        },
+      );
+    });
+ 
+}
 
 
 
@@ -63,11 +98,19 @@ export default class Search extends Component {
         <AntDesign name='search1' color={Colors.grey} size={25}/>
         <TextInput
         placeholder='Search Contacts'
+        autoCapitalize={false}
+        autoCorrect={false}
         onChangeText={(text)=>this.setState({serachResult:text})}
+        onSubmitEditing={this.onSubmitedEdit}
         style={styles.TextInput}
         />
 
       </View>
+
+
+      {this.state.searchResultData?
+
+
 
 <View style={styles.footerView}>
   <FlatList
@@ -76,7 +119,35 @@ export default class Search extends Component {
   keyExtractor={item=>item.id}
   renderItem={({item,index})=>{
     return(
-      <TouchableOpacity key={index} style={styles.searchButton}>
+      <TouchableOpacity 
+      onPress={()=>Linking.openURL(`tel:${item.user_contact}`)}
+      key={index} style={styles.searchButton}>
+        <Image
+        resizeMode='cover'
+        source={item.user_image?{uri:item.user_image}:
+        require('../../Component/image/user.png')
+      }
+        style={styles.userImage}
+        />
+        <Text style={styles.nameText}>{item.user_name}</Text>
+
+      </TouchableOpacity>
+    )
+  }}
+  
+  />
+</View>:
+
+<View style={styles.footerView}>
+  <FlatList
+  showsVerticalScrollIndicator={false}
+  data={this.state.searchData}
+  keyExtractor={item=>item.id}
+  renderItem={({item,index})=>{
+    return(
+      <TouchableOpacity 
+      onPress={()=>Linking.openURL(`tel:${item.user_contact}`)}
+      key={index} style={styles.searchButton}>
         <Image
         resizeMode='cover'
         source={item.user_image?{uri:item.user_image}:
@@ -92,10 +163,7 @@ export default class Search extends Component {
   
   />
 </View>
-
-
-
-
+}
       </SafeAreaView>
      
     );
@@ -147,7 +215,7 @@ elevation: 2,
   footerView:{
     alignSelf: 'center',
     width:responsiveWidth(100),
-    
+
     marginTop: responsiveHeight(3),
   },
   searchButton:{

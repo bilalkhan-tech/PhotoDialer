@@ -50,12 +50,12 @@ export default class index extends Component {
 
   async SaveDAta()
   { 
-     let { pid,username,contactNum, showImage} = this.state;
+     let { pid,username,contactNum,relation, showImage} = this.state;
 
   await db.transaction(async function (tx) {
     tx.executeSql(
-      'INSERT INTO MyContactBook(user_name, user_contact,pid, user_image) VALUES (?,?,?,?)',
-      [username, contactNum,pid, showImage ],
+      'INSERT INTO MyContactBook(user_name, user_contact,user_relation,pid, user_image) VALUES (?,?,?,?,?)',
+      [username, contactNum,relation,pid, showImage ],
       (tx, results) => {
         console.log(JSON.stringify(results));
        
